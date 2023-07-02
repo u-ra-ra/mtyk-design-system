@@ -1,0 +1,80 @@
+name: draft-release-note
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        required: true
+        type: choice
+        description: "A username passed from the caller workflow"
+        options:
+          - major
+          - minor
+          - patch
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 18
+
+jobs:
+  update_release_draft:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+
+      - name: configure git
+        run: |
+          git config --global user.email "<>"
+          git config --global user.name "GitHub Actions bot" 
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: "Set environment variables"
+        id: set-env
+        run: |
+          git switch main
+          git fetch --tags
+          latest_version=$(git tag --sort -v:refname | head -1)
+          echo $latest_version
+          echo LATEST_VERSION=$latest_version >> $GITHUB_OUTPUT
+      
+      - name: Get next sem-ver
+        id: next-sem-ver
+        run: |
+          sudo wget -O /usr/local/bin/semver \
+            https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
+          sudo chmod +x /usr/local/bin/semver
+          semver --version
+
+          export action=${{ github.event.inputs.release }}
+          next_version=$(semver bump "$action" ${{ steps.set-env.outputs.LATEST_VERSION }})
+          echo $next_version
+          echo NEXT_VERSION=$next_version >> $GITHUB_OUTPUT
+
+      - name: Update package.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export tmp_branch=tmp/update-new-version-${{ steps.next-sem-ver.outputs.NEXT_VERSION }}
+          git checkout -b $tmp_branch
+          pnpm version --no-git-tag-version --new-version ${{ steps.next-sem-ver.outputs.NEXT_VERSION }}
+          git add package.json
+          git commit -m "chore: update package.json (version: ${{ steps.next-sem-ver.outputs.NEXT_VERSION }})"
+          git push -u origin $tmp_branch
+          gh pr create --base main --head $tmp_branch --title ":robot: CAUTION: MERGE IT BEFORE RELEASE." --body "" --reviewer ${{ github.event.sender.login }} || true
+          
+          git switch main
+
+      - uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

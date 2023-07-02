@@ -7,6 +7,10 @@ on:
       - main
     # TODO: build and upload only when components are modified.
 
+env:
+  CI: true
+  NODE_VERSION: 18
+
 jobs:
   chromatic-deployment:
     runs-on: ubuntu-latest
@@ -19,7 +23,7 @@ jobs:
       - name: Set up Node.js 16x
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install dependencies
         run: npm i -g pnpm && pnpm i

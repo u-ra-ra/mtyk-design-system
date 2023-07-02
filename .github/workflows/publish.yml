@@ -1,0 +1,33 @@
+name: publish
+on:
+  release:
+    types: [published]
+
+env:
+  CI: true
+  NODE_VERSION: 18
+
+jobs:
+  publish-node-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com/u-ra-ra'
+
+      - name: Install
+        run: pnpm install --prefer-frozen-lockfile --verify-store-integrity
+
+      - name: Build
+        run: pnpm build
+
+      - name: Publish
+        run: |
+          pnpm publish || echo no update. skip publishing...
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
