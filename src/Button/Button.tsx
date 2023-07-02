@@ -4,6 +4,8 @@ export type ButtonProps = {
   children: ReactNode;
 } & JSX.IntrinsicElements["button"];
 
-export const Button = ({ children, ...props }: ButtonProps) => {
+const Button = ({ children, ...props }: ButtonProps) => {
   return <button {...props}>{children}</button>;
 };
+
+export default Button
