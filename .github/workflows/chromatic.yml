@@ -1,0 +1,31 @@
+# refs: https://www.chromatic.com/docs/github-actions
+name: Chromatic
+
+on:
+  push:
+    branches:
+      - main
+    # TODO: build and upload only when components are modified.
+
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Node.js 16x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm i -g pnpm && pnpm i
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

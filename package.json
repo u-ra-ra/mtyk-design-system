@@ -1,0 +1,38 @@
+{
+  "name": "@u-ra-ra/urara-design-system",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "storybook": "start-storybook -p 9009",
+    "build-storybook": "build-storybook"
+  },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com/u-ra-ra"
+  },
+  "keywords": [],
+  "author": "Motoya Kondo<contact+gh@mtyk.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.1",
+    "@types/node": "^18.16.19",
+    "@types/react": "^18.2.14",
+    "chromatic": "^6.19.9",
+    "typescript": "^4.9.5",
+    "vite": "^4.3.9"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

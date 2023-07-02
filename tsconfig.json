@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "rootDir": "dist",
+        "target": "ESNext",
+        "module": "ESNext",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ESNext"
+        ],
+        "allowJs": false,
+        "declaration": true,
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "skipLibCheck": true,
+        "strict": true,
+        "isolatedModules": true,
+        "noFallthroughCasesInSwitch": true,
+        "jsx": "react-jsx",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": true
+    },
+    "exclude": [
+        "**/node_modules",
+        "**/template*"
+    ],
+    "include": [
+        "src",
+    ]
+}
