@@ -2,11 +2,10 @@
   "name": "@u-ra-ra/urara-design-system",
   "version": "0.0.0",
   "scripts": {
-    "dev": "storybook dev -p 9009",
     "test": "exit 0",
     "build": "tsc && vite build",
-    "storybook": "start-storybook -p 9009",
-    "build-storybook": "tsc && build-storybook"
+    "storybook:start": "tsc && storybook dev -p 9009",
+    "storybook:build": "tsc && storybook build"
   },
   "main": "dist/main.umb.js",
   "module": "dist/main.es.js",
